@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="./css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="js/materialize.min.js"></script>
+    <script src="js/file-saver.min.js"></script>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <input type="file" id="file-input" style="display:none">
+
+    <div id="map"></div>
+    <div id="mainBtn" class="fixed-action-btn">
+      <!-- Modal Trigger -->
+      <a class="waves-effect waves-light btn-floating btn-large red">
+        <i class="large material-icons">location_on</i>
+      </a>
+      <ul>
+        <li><a id="saveBtn" class="btn-floating blue darken-1"><i class="material-icons">cloud_download</i></a></li>
+        <li><a id="loadBtn" class="btn-floating blue darken-1"><i class="material-icons">cloud_upload</i></a></li>
+        <li><a id="deleteBtn" class="btn-floating red modal-trigger" href="#modal-del"><i class="material-icons">delete</i></a></li>
+        <li><a class="btn-floating yellow darken-3 modal-trigger" href="#modal-ant"><i class="large material-icons">add_location</i></a></li>
+        <li><a id="gpsBtn" class="btn-floating green"><i class="large material-icons">gps_off</i></a></li>
+        <li><a id="addBtn" class="btn-floating green modal-trigger" href="#modal-rf"><i class="large material-icons">add_location</i></a></li>
+      </ul>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="modal-rf" class="modal">
+      <form class="col s12" onsubmit="addRFtoMap();return false;">
+      <div class="modal-content">
+        <h4>Add RF Data Point</h4>
+        <div class="row">
+            <div class="input-field col s12">
+              <input id="form-rf-lat" type="text">
+              <label for="form-rf-lat">Latitude</label>
+            </div>
+            <div class="input-field col s12">
+              <input id="form-rf-lng" type="text">
+              <label for="form-rf-lng">Longitude</label>
+            </div>
+            <div class="input-field col s12">
+              <input id="form-rf-freq" type="text">
+              <label for="form-rf-freq">Frequency (Mhz)</label>
+            </div>
+            <div class="input-field col s12">
+              <input id="form-rf-amp" type="text">
+              <label for="form-rf-amp">Amplitude</label>
+            </div>
+            <div class="input-field col s12">
+              <input id="form-rf-head" type="text">
+              <label for="form-rf-head">Heading</label>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn waves-effect waves-light modal-close" type="submit" name="action">Submit
+          <i class="material-icons right">send</i>
+        </button>
+      </div>
+      </form>
+    </div>
+
+  <a id="rightClickTrigger-map" class='dropdown-trigger' href='#' data-target='rightClickMenu-map'></a>
+  <ul id='rightClickMenu-map' class='dropdown-content'>
+    <li><a id="addRFrmb" href="#!">Add RF Measurement</a></li>
+    <li><a id="addAntrmb" href="#!">Add Antenna</a></li>
+  </ul>
+
+  <a id="rightClickTrigger-ant" class='dropdown-trigger' href='#' data-target='rightClickMenu-ant'></a>
+  <ul id='rightClickMenu-ant' class='dropdown-content'>
+    <li><a id="delAntrmb" href="#!">Remove Antenna</a></li>
+  </ul>
+
+    <!-- Modal Structure -->
+    <div id="modal-ant" class="modal">
+      <form class="col s12" onsubmit="addAntToMap();return false;">
+      <div class="modal-content">
+        <h4>Add Known Antnenna Marker</h4>
+        <div class="row">
+            <div class="input-field col s12">
+              <input id="form-ant-lat" type="text">
+              <label for="form-ant-lat">Latitude</label>
+            </div>
+            <div class="input-field col s12">
+              <input id="form-ant-lng" type="text">
+              <label for="form-ant-lng">Longitude</label>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn waves-effect waves-light modal-close" type="submit" name="action">Submit
+          <i class="material-icons right">send</i>
+        </button>
+      </div>
+      </form>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="modal-del" class="modal">
+      <div class="modal-content">
+        <h4>Delete RF Data Point</h4>
+        <div class="row">
+            <div id="curRF" class="collection">
+            </div>
+        </div>
+      </div>
+    </div>
+    <script src="js/map-func.js?v=1.0.3"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjhcckw-J0vMd3FAO5KSJI3b7a2pc9SW8&callback=initMap&libraries=visualization,geometry"
+    async defer></script>
+  </body>
+</html>
+
+<!-- google.maps.geometry.spherical.computeOffset(heatMapData[0].location,distance,heading) -->
